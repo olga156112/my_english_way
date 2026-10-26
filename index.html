@@ -84,6 +84,7 @@ let editId=null,flashIndex=0,flashBack=false,flashOrder=[];
 const wordForm=document.getElementById('wordForm');
 const dayLabels=['Понеділок','Вівторок','Середа','Четвер','П’ятниця','Субота','Неділя'];
 let dayPracticeMode='translate';
+const dailyOpenState={0:true}; const dailyModes={};
 function renderWords(){renderDailyWordLists();renderDayPractice();let q=document.getElementById('wordSearch').value.trim().toLocaleLowerCase();let filtered=words.filter(w=>(w.en+' '+w.uk+' '+(w.ex||'')).toLocaleLowerCase().includes(q));document.getElementById('vocabCount').textContent=words.length+' слів / виразів';const list=document.getElementById('wordList');list.replaceChildren();if(!filtered.length){let e=document.createElement('p');e.className='small';e.textContent=words.length?'За пошуком нічого не знайдено.':'Слів поки немає. Додай перше слово вище.';list.append(e)}
 for(const w of filtered){let box=document.createElement('div');box.className='word-item';let text=document.createElement('div');let name=document.createElement('strong');name.textContent=w.en;let tr=document.createElement('div');tr.textContent=w.uk;let ex=document.createElement('p');ex.className='small';ex.textContent=w.ex||'';text.append(name,tr,ex);let actions=document.createElement('div');actions.className='v-actions';let edit=document.createElement('button');edit.className='clear';edit.textContent='Редагувати';edit.onclick=()=>{editId=w.id;document.getElementById('wordEnglish').value=w.en;document.getElementById('wordUkrainian').value=w.uk;document.getElementById('wordExample').value=w.ex||'';document.getElementById('wordDay').value=String(w.day??0);document.getElementById('wordSubmit').textContent='✓ Зберегти зміни';document.getElementById('wordCancel').hidden=false;document.getElementById('wordEnglish').focus()};let del=document.createElement('button');del.className='clear';del.textContent='Видалити';del.onclick=()=>{if(!confirm('Видалити слово «'+w.en+'»?'))return;words=words.filter(x=>x.id!==w.id);saveWords();resetFlash();renderWords()};actions.append(edit,del);box.append(text,actions);list.append(box)}renderFlash()}
 function cancelEdit(){editId=null;wordForm.reset();document.getElementById('wordSubmit').textContent='＋ Зберегти слово';document.getElementById('wordCancel').hidden=true}
@@ -126,7 +127,7 @@ document.getElementById('vocabRetry').onclick=()=>{document.querySelectorAll('#v
 renderVocabLessons();renderQuickVocab();
 
 
-const dailyOpenState={0:true}; const dailyModes={};
+
 function renderDailyWordLists(){
  const host=document.getElementById('dailyWordLists');if(!host)return;
  host.replaceChildren();
