@@ -176,12 +176,12 @@ function renderDailyWordLists(){
       const value=input.value.trim();
       if(!value){feedback.textContent='';input.style.borderColor='';return}
       if(mode==='sentence'){
-       const used=value.toLocaleLowerCase().includes(w.en.toLocaleLowerCase())&&value.split(/\\s+/).length>=4;
+       const used=value.toLocaleLowerCase().includes(w.en.toLocaleLowerCase())&&value.split(/\s+/).length>=4;
        feedback.textContent=used?'✓ Вираз використано. Граматику перевір окремо.':'✗ Використай «'+w.en+'» у реченні щонайменше з 4 слів.';
        feedback.style.color=used?'#168466':'#b04b48';input.style.borderColor=used?'#168466':'#b04b48';return;
       }
       const expected=mode==='choice'?w.uk:w.en;
-      const normalizeAnswer=v=>v.trim().toLocaleLowerCase().replace(/\\s+/g,' ');
+      const normalizeAnswer=v=>v.trim().toLocaleLowerCase().replace(/\s+/g,' ');
       const correct=normalizeAnswer(value)===normalizeAnswer(expected);
       feedback.textContent=correct?'✓ Правильно!':'✗ Неправильно. Правильна відповідь: '+expected;
       feedback.style.color=correct?'#168466':'#b04b48';input.style.borderColor=correct?'#168466':'#b04b48';
