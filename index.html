@@ -89,6 +89,8 @@ if(starterAdded){try{localStorage.setItem(vocabKey,JSON.stringify(words))}catch{
 function saveWords(){try{localStorage.setItem(vocabKey,JSON.stringify(words))}catch{document.getElementById('wordMessage').textContent='Не вдалося зберегти слова — перевір налаштування браузера.'}}
 let editId=null,flashIndex=0,flashBack=false,flashOrder=[];
 const wordForm=document.getElementById('wordForm');
+const dayLabels=['Понеділок','Вівторок','Середа','Четвер','П’ятниця','Субота','Неділя'];
+let dayPracticeMode='translate';
 function renderWords(){renderDailyWordLists();renderDayPractice();let q=document.getElementById('wordSearch').value.trim().toLocaleLowerCase();let filtered=words.filter(w=>(w.en+' '+w.uk+' '+(w.ex||'')).toLocaleLowerCase().includes(q));document.getElementById('vocabCount').textContent=words.length+' слів / виразів';const list=document.getElementById('wordList');list.replaceChildren();if(!filtered.length){let e=document.createElement('p');e.className='small';e.textContent=words.length?'За пошуком нічого не знайдено.':'Слів поки немає. Додай перше слово вище.';list.append(e)}
 for(const w of filtered){let box=document.createElement('div');box.className='word-item';let text=document.createElement('div');let name=document.createElement('strong');name.textContent=w.en;let tr=document.createElement('div');tr.textContent=w.uk;let ex=document.createElement('p');ex.className='small';ex.textContent=w.ex||'';text.append(name,tr,ex);let actions=document.createElement('div');actions.className='v-actions';let edit=document.createElement('button');edit.className='clear';edit.textContent='Редагувати';edit.onclick=()=>{editId=w.id;document.getElementById('wordEnglish').value=w.en;document.getElementById('wordUkrainian').value=w.uk;document.getElementById('wordExample').value=w.ex||'';document.getElementById('wordDay').value=String(w.day??0);document.getElementById('wordSubmit').textContent='✓ Зберегти зміни';document.getElementById('wordCancel').hidden=false;document.getElementById('wordEnglish').focus()};let del=document.createElement('button');del.className='clear';del.textContent='Видалити';del.onclick=()=>{if(!confirm('Видалити слово «'+w.en+'»?'))return;words=words.filter(x=>x.id!==w.id);saveWords();resetFlash();renderWords()};actions.append(edit,del);box.append(text,actions);list.append(box)}renderFlash()}
 function cancelEdit(){editId=null;wordForm.reset();document.getElementById('wordSubmit').textContent='＋ Зберегти слово';document.getElementById('wordCancel').hidden=true}
@@ -129,8 +131,7 @@ function renderQuickVocab(){const host=document.getElementById('vocabQuickPracti
 document.getElementById('vocabCheck').onclick=()=>{let count=0;document.querySelectorAll('#vocabQuickPractice input').forEach(input=>{const i=+input.dataset.qi;const ok=input.value.trim().toLowerCase()===quickVocab[i].answer;if(ok)count++;const el=document.getElementById('vocab-answer-'+i);el.textContent=ok?'✓ Правильно':'✗ Правильна відповідь: '+quickVocab[i].answer;el.style.color=ok?'#168466':'#b04b48'});document.getElementById('vocabFeedback').textContent='Результат: '+count+' із '+quickVocab.length+'. Спробуй використати ці слова у власних реченнях.'};
 document.getElementById('vocabRetry').onclick=()=>{document.querySelectorAll('#vocabQuickPractice input').forEach(x=>x.value='');document.querySelectorAll('.answer-state').forEach(x=>x.textContent='');document.getElementById('vocabFeedback').textContent=''};
 renderVocabLessons();renderQuickVocab();
-const dayLabels=['Понеділок','Вівторок','Середа','Четвер','П’ятниця','Субота','Неділя'];
-let dayPracticeMode='translate';
+
 function renderDailyWordLists(){
  const el=document.getElementById('dailyWordLists');if(!el)return;el.replaceChildren();
  dayLabels.forEach((label,i)=>{
