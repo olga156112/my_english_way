@@ -171,7 +171,24 @@ function renderDailyWordLists(){
       for(const v of variants){const option=document.createElement('option');option.value=v.uk;option.textContent=v.uk;input.append(option)}
      }else{input=document.createElement('input');input.type='text';input.placeholder=mode==='translate'?'Напиши англійською':'Напиши речення англійською'}
      input.className='daily-answer';input.style.display='block';input.style.marginTop='9px';row.append(input);
-     const feedback=document.createElement('div');feedback.className='small daily-feedback';feedback.style.marginTop='7px';row.append(feedback);exercise.append(row);
+     const feedback=document.createElement('div');feedback.className='small daily-feedback';feedback.style.marginTop='7px';row.append(feedback);
+     const assess=()=>{
+      const value=input.value.trim();
+      if(!value){feedback.textContent='';input.style.borderColor='';return}
+      if(mode==='sentence'){
+       const used=value.toLocaleLowerCase().includes(w.en.toLocaleLowerCase())&&value.split(/\\s+/).length>=4;
+       feedback.textContent=used?'✓ Вираз використано. Граматику перевір окремо.':'✗ Використай «'+w.en+'» у реченні щонайменше з 4 слів.';
+       feedback.style.color=used?'#168466':'#b04b48';input.style.borderColor=used?'#168466':'#b04b48';return;
+      }
+      const expected=mode==='choice'?w.uk:w.en;
+      const normalizeAnswer=v=>v.trim().toLocaleLowerCase().replace(/\\s+/g,' ');
+      const correct=normalizeAnswer(value)===normalizeAnswer(expected);
+      feedback.textContent=correct?'✓ Правильно!':'✗ Неправильно. Правильна відповідь: '+expected;
+      feedback.style.color=correct?'#168466':'#b04b48';input.style.borderColor=correct?'#168466':'#b04b48';
+     };
+     if(mode==='choice')input.addEventListener('change',assess);
+     else {input.addEventListener('blur',assess);input.addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();assess();input.blur()}});input.addEventListener('input',()=>{feedback.textContent='';input.style.borderColor=''})}
+     exercise.append(row);
     });
    }
    check.onclick=()=>{
