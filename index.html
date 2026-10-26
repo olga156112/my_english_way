@@ -176,7 +176,7 @@ function renderDailyWordLists(){
       const value=input.value.trim();
       if(!value){feedback.textContent='';input.style.borderColor='';return}
       if(mode==='sentence'){
-       const used=value.toLocaleLowerCase().includes(w.en.toLocaleLowerCase())&&value.split(/\s+/).length>=4;
+       const used=value.toLocaleLowerCase().includes(w.en.toLocaleLowerCase())&&(value.trim().match(/\S+/g)||[]).length>=4;
        feedback.textContent=used?'✓ Вираз використано. Граматику перевір окремо.':'✗ Використай «'+w.en+'» у реченні щонайменше з 4 слів.';
        feedback.style.color=used?'#168466':'#b04b48';input.style.borderColor=used?'#168466':'#b04b48';return;
       }
@@ -195,7 +195,7 @@ function renderDailyWordLists(){
     let correct=0;
     [...exercise.children].forEach((row,j)=>{
      const value=row.querySelector('.daily-answer').value.trim(),w=arr[j],msg=row.querySelector('.daily-feedback');
-     if(mode==='sentence'){const ok=value.toLowerCase().includes(w.en.toLowerCase())&&value.trim().split(/\s+/).length>=4;msg.textContent=ok?'✓ Вираз використано. Перевір граматику окремо.':'Склади речення щонайменше з 4 слів із «'+w.en+'»';if(ok)correct++}
+     if(mode==='sentence'){const ok=value.toLowerCase().includes(w.en.toLowerCase())&&(value.trim().match(/\S+/g)||[]).length>=4;msg.textContent=ok?'✓ Вираз використано. Перевір граматику окремо.':'Склади речення щонайменше з 4 слів із «'+w.en+'»';if(ok)correct++}
      else{const wanted=mode==='translate'?w.en:w.uk;const ok=value.toLocaleLowerCase()===wanted.toLocaleLowerCase();msg.textContent=ok?'✓ Правильно':'✗ Правильна відповідь: '+wanted;if(ok)correct++}
     });score.textContent='Результат: '+correct+' / '+arr.length;
    };
