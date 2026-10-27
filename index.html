@@ -79,6 +79,26 @@ for(const [en,uk] of mondayStarterWords){
  }
 }
 if(starterAdded){try{localStorage.setItem(vocabKey,JSON.stringify(words))}catch{}}
+
+const tuesdayStarterWords=[
+ ['social media','соціальні мережі'],
+ ['ironically','іронічно, як не дивно'],
+ ['unlike','на відміну від'],
+ ['to miss out on','упустити можливість, не скористатися чимось'],
+ ['addiction','залежність'],
+ ['early adopters','перші користувачі нових технологій'],
+ ['constantly','постійно, безперервно'],
+ ['to be cut off from','бути відрізаним від, не мати доступу до']
+];
+let tuesdayAdded=0;
+for(const [en,uk] of tuesdayStarterWords){
+ if(!words.some(w=>w.en.trim().toLocaleLowerCase()===en)){
+  words.push({id:'tuesday-starter-'+en.replace(/\s+/g,'-'),en,uk,ex:'',day:1});
+  tuesdayAdded++;
+ }
+}
+if(tuesdayAdded){try{localStorage.setItem(vocabKey,JSON.stringify(words))}catch{}}
+
 function saveWords(){try{localStorage.setItem(vocabKey,JSON.stringify(words))}catch{document.getElementById('wordMessage').textContent='Не вдалося зберегти слова — перевір налаштування браузера.'}}
 let editId=null,flashIndex=0,flashBack=false,flashOrder=[];
 const wordForm=document.getElementById('wordForm');
